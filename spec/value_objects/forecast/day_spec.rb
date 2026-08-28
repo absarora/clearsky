@@ -4,6 +4,7 @@
 # It is an immutable value object nested within Forecast.
 
 require "spec_helper"
+require "date"
 require_relative "../../../app/value_objects/forecast/day"
 
 RSpec.describe Clearsky::Forecast::Day do
