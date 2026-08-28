@@ -19,20 +19,13 @@ require 'webmock/rspec'
 # custom matchers used across the suite.
 Rails.root.glob('spec/support/**/*.rb').sort_by(&:to_s).each { |f| require f }
 
-# Ensure test database schema is current. Remove if not using ActiveRecord.
-begin
-  ActiveRecord::Migration.maintain_test_schema!
-rescue ActiveRecord::PendingMigrationError => e
-  abort e.to_s.strip
-end
-
 RSpec.configure do |config|
-  config.fixture_paths = [Rails.root.join('spec/fixtures')]
+  # This app has no ActiveRecord models. Disabling AR integration prevents
+  # RSpec from attempting a database connection on every example, which would
+  # fail in CI where no PostgreSQL service is running.
+  config.use_active_record = false
 
-  # Wrap each example in a transaction, rolled back after the example completes.
-  config.use_transactional_fixtures = true
-
-  # Infer spec type from file location (e.g. spec/controllers → type: :controller).
+  # Infer spec type from file location (e.g. spec/requests → type: :request).
   config.infer_spec_type_from_file_location!
 
   # Filter Rails gem internals from backtraces for cleaner failure output.

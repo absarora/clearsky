@@ -2,14 +2,12 @@
 #
 # PostgreSQL configuration for all environments.
 #
-# Rails 8 uses separate databases for Solid Cache, Solid Queue, and Solid Cable
-# in all environments. Each has its own migrations path under db/.
+# Development and production use separate databases for Solid Cache, Queue,
+# and Cable. Test uses a single database to simplify CI setup.
 #
 # Production credentials are never stored here. Provide them via:
 #   - Rails encrypted credentials (preferred)
-#   - DATABASE_URL / CLEARSKY_DATABASE_PASSWORD environment variables
-#
-# See https://guides.rubyonrails.org/configuring.html#configuring-a-database
+#   - DATABASE_URL environment variable
 
 default: &default
   adapter: postgresql
@@ -37,36 +35,28 @@ development:
 
 # ─── Test ─────────────────────────────────────────────────────────────────────
 #
-# Warning: the test database is erased and regenerated on each test run.
-# Never set it to the same database as development.
+# Single database for all connections in test. Simplifies CI setup —
+# no need to spin up separate databases for Solid Cache, Queue, and Cable.
+# All test cache operations use memory_store anyway (config/environments/test.rb).
 
 test:
-  primary: &primary_test
+  primary:
     <<: *default
     database: clearsky_test
   cache:
-    <<: *primary_test
-    database: clearsky_test_cache
+    <<: *default
+    database: clearsky_test
     migrations_paths: db/cache_migrate
   queue:
-    <<: *primary_test
-    database: clearsky_test_queue
+    <<: *default
+    database: clearsky_test
     migrations_paths: db/queue_migrate
   cable:
-    <<: *primary_test
-    database: clearsky_test_cable
+    <<: *default
+    database: clearsky_test
     migrations_paths: db/cable_migrate
 
 # ─── Production ───────────────────────────────────────────────────────────────
-#
-# Credentials are provided via environment variables or Rails encrypted credentials.
-# Never commit plaintext passwords to source control.
-#
-# To configure via credentials:
-#   EDITOR="code --wait" rails credentials:edit
-#
-# To configure via environment variable:
-#   DATABASE_URL="postgres://user:pass@host/clearsky_production"
 
 production:
   primary: &primary_production
