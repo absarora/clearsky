@@ -41,7 +41,7 @@ module Clearsky
     end
 
     def inspect
-      "#<Clearsky::Location #{to_s} (#{lat}, #{lon})>"
+      "#<Clearsky::Location #{to_s} (#{lat}, #{lon})>" # rubocop:disable Lint/RedundantStringCoercion
     end
   end
 end
