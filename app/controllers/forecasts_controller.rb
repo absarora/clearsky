@@ -22,7 +22,7 @@ class ForecastsController < ApplicationController
       redirect_to root_path, alert: "Please enter a zip code." and return
     end
 
-    forecast = Clearsky::ForecastService.new.call(zip:)
-    @presenter = Clearsky::ForecastPresenter.new(forecast)
+    forecast = ForecastService.new.call(zip:)
+    @presenter = ForecastPresenter.new(forecast)
   end
 end

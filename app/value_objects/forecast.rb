@@ -11,42 +11,40 @@
 
 require_relative "forecast/day"
 
-module Clearsky
-  class Forecast
-    attr_reader :location, :current_temp_f, :feels_like_f, :condition,
-                :humidity, :wind_mph, :high_temp_f, :low_temp_f,
-                :uv_index, :forecast_days, :cached
+class Forecast
+  attr_reader :location, :current_temp_f, :feels_like_f, :condition,
+              :humidity, :wind_mph, :high_temp_f, :low_temp_f,
+              :uv_index, :forecast_days, :cached
 
-    def initialize(
-      location:,
-      current_temp_f:,
-      feels_like_f:,
-      condition:,
-      humidity:,
-      wind_mph:,
-      high_temp_f:,
-      low_temp_f:,
-      uv_index:,
-      forecast_days:,
-      cached: false
-    )
-      @location       = location
-      @current_temp_f = current_temp_f
-      @feels_like_f   = feels_like_f
-      @condition      = condition
-      @humidity       = humidity
-      @wind_mph       = wind_mph
-      @high_temp_f    = high_temp_f
-      @low_temp_f     = low_temp_f
-      @uv_index       = uv_index
-      @forecast_days  = forecast_days.freeze
-      @cached         = cached
-      freeze
-    end
+  def initialize(
+    location:,
+    current_temp_f:,
+    feels_like_f:,
+    condition:,
+    humidity:,
+    wind_mph:,
+    high_temp_f:,
+    low_temp_f:,
+    uv_index:,
+    forecast_days:,
+    cached: false
+  )
+    @location       = location
+    @current_temp_f = current_temp_f
+    @feels_like_f   = feels_like_f
+    @condition      = condition
+    @humidity       = humidity
+    @wind_mph       = wind_mph
+    @high_temp_f    = high_temp_f
+    @low_temp_f     = low_temp_f
+    @uv_index       = uv_index
+    @forecast_days  = forecast_days.freeze
+    @cached         = cached
+    freeze
+  end
 
-    # Convenience predicate for the presenter and view cache indicator.
-    def cached?
-      cached == true
-    end
+  # Convenience predicate for the presenter and view cache indicator.
+  def cached?
+    cached == true
   end
 end

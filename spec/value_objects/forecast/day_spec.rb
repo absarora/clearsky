@@ -7,7 +7,7 @@ require "spec_helper"
 require "date"
 require_relative "../../../app/value_objects/forecast/day"
 
-RSpec.describe Clearsky::Forecast::Day do
+RSpec.describe Forecast::Day do
   let(:valid_attributes) do
     {
       date:            Date.new(2025, 1, 15),

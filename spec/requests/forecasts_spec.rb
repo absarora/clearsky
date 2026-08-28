@@ -15,11 +15,11 @@ require_relative "../../app/services/forecast_service"
 
 RSpec.describe "Forecasts", type: :request do
   let(:location) do
-    Clearsky::Location.new(zip: "93721", city: "Fresno", region: "California")
+    Location.new(zip: "93721", city: "Fresno", region: "California")
   end
 
   let(:forecast) do
-    Clearsky::Forecast.new(
+    Forecast.new(
       location:       location,
       current_temp_f: 72.9,
       feels_like_f:   66.7,
@@ -34,10 +34,10 @@ RSpec.describe "Forecasts", type: :request do
     )
   end
 
-  let(:forecast_service) { instance_double(Clearsky::ForecastService) }
+  let(:forecast_service) { instance_double(ForecastService) }
 
   before do
-    allow(Clearsky::ForecastService).to receive(:new).and_return(forecast_service)
+    allow(ForecastService).to receive(:new).and_return(forecast_service)
   end
 
   # ─── GET / ───────────────────────────────────────────────────────────────
@@ -78,7 +78,7 @@ RSpec.describe "Forecasts", type: :request do
     context "when ForecastService returns a NullForecast" do
       before do
         allow(forecast_service).to receive(:call).and_return(
-          Clearsky::Forecast::NullForecast.new
+          Forecast::NullForecast.new
         )
       end
 

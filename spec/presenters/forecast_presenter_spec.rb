@@ -14,21 +14,21 @@ require_relative "../../app/value_objects/forecast"
 require_relative "../../app/value_objects/forecast/null_forecast"
 require_relative "../../app/presenters/forecast_presenter"
 
-RSpec.describe Clearsky::ForecastPresenter do
+RSpec.describe ForecastPresenter do
   let(:location) do
-    Clearsky::Location.new(zip: "93721", city: "Fresno", region: "California")
+    Location.new(zip: "93721", city: "Fresno", region: "California")
   end
 
   let(:forecast_days) do
     [
-      Clearsky::Forecast::Day.new(
+      Forecast::Day.new(
         date:           Date.new(2026, 8, 28),
         high_temp_f:    93.0,
         low_temp_f:     70.7,
         condition:      "Sunny",
         chance_of_rain: 0
       ),
-      Clearsky::Forecast::Day.new(
+      Forecast::Day.new(
         date:           Date.new(2026, 8, 29),
         high_temp_f:    88.0,
         low_temp_f:     68.0,
@@ -39,7 +39,7 @@ RSpec.describe Clearsky::ForecastPresenter do
   end
 
   let(:forecast) do
-    Clearsky::Forecast.new(
+    Forecast.new(
       location:       location,
       current_temp_f: 72.9,
       feels_like_f:   66.7,
@@ -95,7 +95,7 @@ RSpec.describe Clearsky::ForecastPresenter do
   describe "#cached_indicator" do
     context "when the forecast is from cache" do
       let(:forecast) do
-        Clearsky::Forecast.new(
+        Forecast.new(
           location:       location,
           current_temp_f: 72.9,
           feels_like_f:   66.7,
@@ -147,7 +147,7 @@ RSpec.describe Clearsky::ForecastPresenter do
   # ─── NullForecast ────────────────────────────────────────────────────────
 
   describe "with a NullForecast" do
-    subject(:presenter) { described_class.new(Clearsky::Forecast::NullForecast.new) }
+    subject(:presenter) { described_class.new(Forecast::NullForecast.new) }
 
     it "returns a placeholder for current temperature" do
       expect(presenter.current_temperature).to eq("--°F")

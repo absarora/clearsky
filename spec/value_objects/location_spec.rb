@@ -7,7 +7,7 @@
 require "spec_helper"
 require_relative "../../app/value_objects/location"
 
-RSpec.describe Clearsky::Location do
+RSpec.describe Location do
   let(:valid_attributes) do
     {
       zip:    "93721",

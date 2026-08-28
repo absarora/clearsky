@@ -10,7 +10,7 @@
 require "rails_helper"
 require_relative "../../../app/services/weather/weather_api_provider"
 
-RSpec.describe Clearsky::Weather::WeatherApiProvider do
+RSpec.describe Weather::WeatherApiProvider do
   subject(:provider) { described_class.new }
 
   # A real zip code used for the VCR cassette recording.
@@ -21,7 +21,7 @@ RSpec.describe Clearsky::Weather::WeatherApiProvider do
       subject(:forecast) { provider.fetch_forecast(zip:) }
 
       it "returns a Forecast value object" do
-        expect(forecast).to be_a(Clearsky::Forecast)
+        expect(forecast).to be_a(Forecast)
       end
 
       it "returns current temperature" do
@@ -62,7 +62,7 @@ RSpec.describe Clearsky::Weather::WeatherApiProvider do
       end
 
       it "returns forecast days as Forecast::Day objects" do
-        expect(forecast.forecast_days).to all(be_a(Clearsky::Forecast::Day))
+        expect(forecast.forecast_days).to all(be_a(Forecast::Day))
       end
 
       it "returns a Location with the correct zip" do
@@ -78,7 +78,7 @@ RSpec.describe Clearsky::Weather::WeatherApiProvider do
       it "raises a WeatherApiError" do
         expect {
           provider.fetch_forecast(zip: "00000")
-        }.to raise_error(Clearsky::WeatherApiError)
+        }.to raise_error(WeatherApiError)
       end
     end
 
@@ -90,7 +90,7 @@ RSpec.describe Clearsky::Weather::WeatherApiProvider do
       it "raises a WeatherApiError" do
         expect {
           provider.fetch_forecast(zip:)
-        }.to raise_error(Clearsky::WeatherApiError)
+        }.to raise_error(WeatherApiError)
       end
     end
   end

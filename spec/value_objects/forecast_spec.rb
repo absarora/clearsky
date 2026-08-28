@@ -10,13 +10,13 @@ require_relative "../../app/value_objects/location"
 require_relative "../../app/value_objects/forecast/day"
 require_relative "../../app/value_objects/forecast"
 
-RSpec.describe Clearsky::Forecast do
+RSpec.describe Forecast do
   let(:location) do
-    Clearsky::Location.new(zip: "93721", city: "Fresno", region: "California")
+    Location.new(zip: "93721", city: "Fresno", region: "California")
   end
 
   let(:forecast_day) do
-    Clearsky::Forecast::Day.new(
+    Forecast::Day.new(
       date:           Date.new(2025, 1, 15),
       high_temp_f:    75.0,
       low_temp_f:     58.0,
@@ -70,7 +70,7 @@ RSpec.describe Clearsky::Forecast do
 
   describe "#forecast_days" do
     it "returns an array of Forecast::Day objects" do
-      expect(forecast.forecast_days).to all(be_a(Clearsky::Forecast::Day))
+      expect(forecast.forecast_days).to all(be_a(Forecast::Day))
     end
 
     it "is frozen" do

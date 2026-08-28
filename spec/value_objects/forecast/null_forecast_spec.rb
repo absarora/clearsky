@@ -7,7 +7,7 @@
 require "spec_helper"
 require_relative "../../../app/value_objects/forecast/null_forecast"
 
-RSpec.describe Clearsky::Forecast::NullForecast do
+RSpec.describe Forecast::NullForecast do
   subject(:null_forecast) { described_class.new }
 
   # ─── Null Interface ──────────────────────────────────────────────────────

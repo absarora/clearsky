@@ -19,7 +19,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Fri, 28 Aug 2026 10:10:07 GMT
+      - Fri, 28 Aug 2026 12:04:37 GMT
       Content-Type:
       - application/json
       Transfer-Encoding:
@@ -30,7 +30,7 @@ http_interactions:
       - Accept-Encoding
       - Accept-Encoding
       Server:
-      - BunnyCDN-LA1-1002
+      - BunnyCDN-LA1-987
       Cdn-Pullzone:
       - '93447'
       Cdn-Requestcountrycode:
@@ -38,7 +38,7 @@ http_interactions:
       Cache-Control:
       - public, max-age=180
       X-Weatherapi-Qpm-Left:
-      - '9999999'
+      - '9999994'
       Cdn-Proxyver:
       - '1.62'
       Cdn-Requestpullsuccess:
@@ -46,11 +46,11 @@ http_interactions:
       Cdn-Requestpullcode:
       - '200'
       Cdn-Cachedat:
-      - '08/28/2026 10:10:06'
+      - '08/28/2026 12:04:36'
       Cdn-Edgestorageid:
       - '996'
       Cdn-Requestid:
-      - 4d229bdd7109539141f341a1822c5bb6
+      - 6ca68915b2a0f22cb0fe372f92e56efd
       Cdn-Cache:
       - HIT
       Cdn-Status:
@@ -59,10 +59,10 @@ http_interactions:
       - '0'
     body:
       encoding: ASCII-8BIT
-      string: '{"location":{"name":"Fresno","region":"California","country":"USA","lat":36.7377014160156,"lon":-119.783996582031,"tz_id":"America/Los_Angeles","localtime_epoch":1787911806,"localtime":"2026-08-28
-        03:10"},"current":{"last_updated_epoch":1787911200,"last_updated":"2026-08-28
-        03:00","temp_c":22.4,"temp_f":72.3,"is_day":0,"condition":{"text":"Patchy
-        rain nearby","icon":"//cdn.weatherapi.com/weather/64x64/night/176.png","code":1063},"wind_mph":10.3,"wind_kph":16.6,"wind_degree":303,"wind_dir":"WNW","pressure_mb":1010.0,"pressure_in":29.81,"precip_mm":0.02,"precip_in":0.0,"humidity":43,"cloud":100,"feelslike_c":19.1,"feelslike_f":66.4,"windchill_c":22.4,"windchill_f":72.3,"heatindex_c":24.3,"heatindex_f":75.7,"dewpoint_c":9.4,"dewpoint_f":48.9,"vis_km":10.0,"vis_miles":6.0,"uv":0.0,"gust_mph":18.2,"gust_kph":29.2,"will_it_rain":0,"chance_of_rain":12,"will_it_snow":0,"chance_of_snow":0,"wetbulb_c":14.8,"wetbulb_f":58.6,"short_rad":0,"diff_rad":0,"dni":0,"gti":0},"forecast":{"forecastday":[{"date":"2026-08-28","date_epoch":1787875200,"day":{"maxtemp_c":33.9,"maxtemp_f":93.0,"mintemp_c":21.5,"mintemp_f":70.7,"avgtemp_c":28.0,"avgtemp_f":82.4,"maxwind_mph":12.5,"maxwind_kph":20.2,"totalprecip_mm":0.64,"totalprecip_in":0.03,"totalsnow_cm":0.0,"avgvis_km":10.0,"avgvis_miles":6.0,"avghumidity":31,"daily_will_it_rain":0,"daily_chance_of_rain":36,"daily_will_it_snow":0,"daily_chance_of_snow":0,"condition":{"text":"Patchy
+      string: '{"location":{"name":"Fresno","region":"California","country":"USA","lat":36.7377014160156,"lon":-119.783996582031,"tz_id":"America/Los_Angeles","localtime_epoch":1787918676,"localtime":"2026-08-28
+        05:04"},"current":{"last_updated_epoch":1787917500,"last_updated":"2026-08-28
+        04:45","temp_c":21.9,"temp_f":71.4,"is_day":0,"condition":{"text":"Patchy
+        rain nearby","icon":"//cdn.weatherapi.com/weather/64x64/night/176.png","code":1063},"wind_mph":10.3,"wind_kph":16.6,"wind_degree":316,"wind_dir":"NW","pressure_mb":1010.0,"pressure_in":29.83,"precip_mm":0.02,"precip_in":0.0,"humidity":42,"cloud":100,"feelslike_c":18.3,"feelslike_f":64.9,"windchill_c":21.9,"windchill_f":71.4,"heatindex_c":24.1,"heatindex_f":75.4,"dewpoint_c":8.4,"dewpoint_f":47.1,"vis_km":10.0,"vis_miles":6.0,"uv":0.0,"gust_mph":20.4,"gust_kph":32.8,"will_it_rain":0,"chance_of_rain":11,"will_it_snow":0,"chance_of_snow":0,"wetbulb_c":14.2,"wetbulb_f":57.5,"short_rad":0,"diff_rad":0,"dni":0,"gti":0},"forecast":{"forecastday":[{"date":"2026-08-28","date_epoch":1787875200,"day":{"maxtemp_c":33.9,"maxtemp_f":93.0,"mintemp_c":21.5,"mintemp_f":70.7,"avgtemp_c":28.0,"avgtemp_f":82.4,"maxwind_mph":12.5,"maxwind_kph":20.2,"totalprecip_mm":0.64,"totalprecip_in":0.03,"totalsnow_cm":0.0,"avgvis_km":10.0,"avgvis_miles":6.0,"avghumidity":31,"daily_will_it_rain":0,"daily_chance_of_rain":36,"daily_will_it_snow":0,"daily_chance_of_snow":0,"condition":{"text":"Patchy
         rain nearby","icon":"//cdn.weatherapi.com/weather/64x64/day/176.png","code":1063},"uv":7.0,"avgwetbulb_c":16.4,"avgwetbulb_f":61.6,"maxwetbulb_c":19.1,"maxwetbulb_f":66.4},"astro":{"sunrise":"06:27
         AM","sunset":"07:33 PM","moonrise":"07:54 PM","moonset":"07:04 AM","moon_phase":"Full
         Moon","moon_illumination":98,"is_moon_up":1,"is_sun_up":0},"hour":[{"time_epoch":1787900400,"time":"2026-08-28
@@ -267,5 +267,5 @@ http_interactions:
         21:00","temp_c":29.0,"temp_f":84.2,"is_day":0,"condition":{"text":"Overcast","icon":"//cdn.weatherapi.com/weather/64x64/night/122.png","code":1009},"wind_mph":5.6,"wind_kph":9.0,"wind_degree":205,"wind_dir":"SSW","pressure_mb":1008.0,"pressure_in":29.77,"precip_mm":0.0,"precip_in":0.0,"snow_cm":0.0,"humidity":15,"cloud":97,"feelslike_c":25.3,"feelslike_f":77.5,"windchill_c":29.0,"windchill_f":84.2,"heatindex_c":27.1,"heatindex_f":80.8,"dewpoint_c":-0.3,"dewpoint_f":31.5,"will_it_rain":0,"chance_of_rain":9,"will_it_snow":0,"chance_of_snow":0,"vis_km":10.0,"vis_miles":6.0,"gust_mph":8.5,"gust_kph":13.7,"uv":0,"wetbulb_c":14.0,"wetbulb_f":57.3,"short_rad":0,"diff_rad":0,"dni":0,"gti":0},{"time_epoch":1788498000,"time":"2026-09-03
         22:00","temp_c":27.1,"temp_f":80.8,"is_day":0,"condition":{"text":"Overcast","icon":"//cdn.weatherapi.com/weather/64x64/night/122.png","code":1009},"wind_mph":7.2,"wind_kph":11.5,"wind_degree":271,"wind_dir":"W","pressure_mb":1008.0,"pressure_in":29.78,"precip_mm":0.0,"precip_in":0.0,"snow_cm":0.0,"humidity":17,"cloud":98,"feelslike_c":22.9,"feelslike_f":73.2,"windchill_c":27.1,"windchill_f":80.8,"heatindex_c":25.5,"heatindex_f":77.9,"dewpoint_c":-0.2,"dewpoint_f":31.6,"will_it_rain":0,"chance_of_rain":9,"will_it_snow":0,"chance_of_snow":0,"vis_km":10.0,"vis_miles":6.0,"gust_mph":11.4,"gust_kph":18.4,"uv":0,"wetbulb_c":13.3,"wetbulb_f":56.0,"short_rad":0,"diff_rad":0,"dni":0,"gti":0},{"time_epoch":1788501600,"time":"2026-09-03
         23:00","temp_c":25.1,"temp_f":77.2,"is_day":0,"condition":{"text":"Overcast","icon":"//cdn.weatherapi.com/weather/64x64/night/122.png","code":1009},"wind_mph":8.5,"wind_kph":13.7,"wind_degree":337,"wind_dir":"NNW","pressure_mb":1009.0,"pressure_in":29.79,"precip_mm":0.0,"precip_in":0.0,"snow_cm":0.0,"humidity":19,"cloud":100,"feelslike_c":20.4,"feelslike_f":68.7,"windchill_c":25.1,"windchill_f":77.2,"heatindex_c":23.9,"heatindex_f":74.9,"dewpoint_c":-0.1,"dewpoint_f":31.8,"will_it_rain":0,"chance_of_rain":9,"will_it_snow":0,"chance_of_snow":0,"vis_km":10.0,"vis_miles":6.0,"gust_mph":14.3,"gust_kph":23.0,"uv":0,"wetbulb_c":12.5,"wetbulb_f":54.5,"short_rad":0,"diff_rad":0,"dni":0,"gti":0}]}]}}'
-  recorded_at: Fri, 28 Aug 2026 10:10:07 GMT
+  recorded_at: Fri, 28 Aug 2026 12:04:37 GMT
 recorded_with: VCR 6.4.0

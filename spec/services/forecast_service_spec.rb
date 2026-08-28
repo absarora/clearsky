@@ -14,13 +14,13 @@ require_relative "../../app/value_objects/forecast"
 require_relative "../../app/value_objects/forecast/day"
 require_relative "../../app/value_objects/forecast/null_forecast"
 
-RSpec.describe Clearsky::ForecastService do
+RSpec.describe ForecastService do
   let(:location) do
-    Clearsky::Location.new(zip: "93721", city: "Fresno", region: "California")
+    Location.new(zip: "93721", city: "Fresno", region: "California")
   end
 
   let(:forecast) do
-    Clearsky::Forecast.new(
+    Forecast.new(
       location:       location,
       current_temp_f: 72.0,
       feels_like_f:   70.2,
@@ -36,7 +36,7 @@ RSpec.describe Clearsky::ForecastService do
   end
 
   # Inject a test double for the weather provider so specs never hit the API.
-  let(:weather_provider) { instance_double(Clearsky::Weather::WeatherApiProvider) }
+  let(:weather_provider) { instance_double(Weather::WeatherApiProvider) }
   let(:zip) { "93721" }
 
   subject(:service) { described_class.new(weather_provider:) }
@@ -60,7 +60,7 @@ RSpec.describe Clearsky::ForecastService do
 
     it "returns a Forecast value object" do
       result = service.call(zip:)
-      expect(result).to be_a(Clearsky::Forecast)
+      expect(result).to be_a(Forecast)
     end
 
     it "returns a forecast marked as not cached" do
@@ -98,7 +98,7 @@ RSpec.describe Clearsky::ForecastService do
 
     it "returns a Forecast value object" do
       result = service.call(zip:)
-      expect(result).to be_a(Clearsky::Forecast)
+      expect(result).to be_a(Forecast)
     end
 
     it "returns a forecast marked as cached" do
@@ -112,12 +112,12 @@ RSpec.describe Clearsky::ForecastService do
   describe "#call when the weather provider raises an error" do
     before do
       allow(weather_provider).to receive(:fetch_forecast)
-        .and_raise(Clearsky::WeatherApiError, "API unavailable")
+        .and_raise(WeatherApiError, "API unavailable")
     end
 
     it "returns a NullForecast" do
       result = service.call(zip:)
-      expect(result).to be_a(Clearsky::Forecast::NullForecast)
+      expect(result).to be_a(Forecast::NullForecast)
     end
 
     it "returns an invalid forecast" do
