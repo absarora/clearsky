@@ -78,6 +78,10 @@ RSpec.describe Clearsky::ForecastService do
 
   describe "#call on a cache hit" do
     before do
+      # Stub the provider even though it should not be called — have_received
+      # requires the method to be stubbed before asserting it was not invoked.
+      allow(weather_provider).to receive(:fetch_forecast)
+
       # Pre-warm the cache with a forecast marked as not cached.
       # ForecastService should mark it as cached on retrieval.
       Rails.cache.write(
