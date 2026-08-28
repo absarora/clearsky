@@ -123,6 +123,8 @@ GEM
       logger
     faraday-net_http (3.4.4)
       net-http (~> 0.5)
+    faraday-retry (2.4.0)
+      faraday (~> 2.0)
     fugit (1.13.0)
       et-orbi (~> 1.4)
       raabro (~> 1.4)
@@ -423,6 +425,7 @@ DEPENDENCIES
   capybara
   debug
   faraday
+  faraday-retry
   importmap-rails
   kamal
   pg (~> 1.1)

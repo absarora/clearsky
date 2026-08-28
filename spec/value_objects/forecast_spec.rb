@@ -6,10 +6,15 @@
 
 require "spec_helper"
 require "date"
+require_relative "../../app/value_objects/location"
 require_relative "../../app/value_objects/forecast/day"
 require_relative "../../app/value_objects/forecast"
 
 RSpec.describe Clearsky::Forecast do
+  let(:location) do
+    Clearsky::Location.new(zip: "93721", city: "Fresno", region: "California")
+  end
+
   let(:forecast_day) do
     Clearsky::Forecast::Day.new(
       date:           Date.new(2025, 1, 15),
@@ -22,6 +27,7 @@ RSpec.describe Clearsky::Forecast do
 
   let(:valid_attributes) do
     {
+      location:       location,
       current_temp_f: 72.0,
       feels_like_f:   70.2,
       condition:      "Sunny",
@@ -37,9 +43,8 @@ RSpec.describe Clearsky::Forecast do
 
   subject(:forecast) { described_class.new(**valid_attributes) }
 
-  # ─── Attribute Access ────────────────────────────────────────────────────
-
   describe "attribute access" do
+    it { expect(forecast.location).to eq(location) }
     it { expect(forecast.current_temp_f).to eq(72.0) }
     it { expect(forecast.feels_like_f).to eq(70.2) }
     it { expect(forecast.condition).to eq("Sunny") }
@@ -52,8 +57,6 @@ RSpec.describe Clearsky::Forecast do
     it { expect(forecast.cached).to eq(false) }
   end
 
-  # ─── Cache Flag ──────────────────────────────────────────────────────────
-
   describe "#cached?" do
     it "returns false when not served from cache" do
       expect(forecast.cached?).to be(false)
@@ -65,8 +68,6 @@ RSpec.describe Clearsky::Forecast do
     end
   end
 
-  # ─── Forecast Days ───────────────────────────────────────────────────────
-
   describe "#forecast_days" do
     it "returns an array of Forecast::Day objects" do
       expect(forecast.forecast_days).to all(be_a(Clearsky::Forecast::Day))
@@ -77,23 +78,19 @@ RSpec.describe Clearsky::Forecast do
     end
   end
 
-  # ─── Immutability ────────────────────────────────────────────────────────
-
   describe "immutability" do
     it "is frozen after initialization" do
       expect(forecast).to be_frozen
     end
   end
 
-  # ─── Validation ──────────────────────────────────────────────────────────
-
   describe "validation" do
-    it "raises ArgumentError when current_temp_f is missing" do
-      expect { described_class.new(**valid_attributes.except(:current_temp_f)) }.to raise_error(ArgumentError)
+    it "raises ArgumentError when location is missing" do
+      expect { described_class.new(**valid_attributes.except(:location)) }.to raise_error(ArgumentError)
     end
 
-    it "raises ArgumentError when condition is missing" do
-      expect { described_class.new(**valid_attributes.except(:condition)) }.to raise_error(ArgumentError)
+    it "raises ArgumentError when current_temp_f is missing" do
+      expect { described_class.new(**valid_attributes.except(:current_temp_f)) }.to raise_error(ArgumentError)
     end
 
     it "raises ArgumentError when forecast_days is missing" do

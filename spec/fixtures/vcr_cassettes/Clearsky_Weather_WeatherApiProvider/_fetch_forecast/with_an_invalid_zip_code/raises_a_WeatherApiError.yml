@@ -1,0 +1,64 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.weatherapi.com/v1/forecast.json?alerts=no&aqi=no&days=7&key=<WEATHER_API_KEY>&q=00000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v2.14.3
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Date:
+      - Fri, 28 Aug 2026 10:10:08 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept-Encoding
+      - Accept-Encoding
+      Server:
+      - BunnyCDN-LA1-1002
+      Cdn-Pullzone:
+      - '93447'
+      Cdn-Requestcountrycode:
+      - US
+      Cache-Control:
+      - no-cache
+      X-Weatherapi-Qpm-Left:
+      - '9999999'
+      Cdn-Proxyver:
+      - '1.62'
+      Cdn-Requestpullsuccess:
+      - 'True'
+      Cdn-Requestpullcode:
+      - '400'
+      Cdn-Cachedat:
+      - '08/28/2026 10:10:08'
+      Cdn-Edgestorageid:
+      - '1114'
+      Cdn-Requestid:
+      - 912b4213fcc523684387427fdee82570
+      Cdn-Cache:
+      - MISS
+      Cdn-Status:
+      - '400'
+      Cdn-Requesttime:
+      - '0'
+    body:
+      encoding: ASCII-8BIT
+      string: '{"error":{"code":1006,"message":"No matching location found."}}'
+  recorded_at: Fri, 28 Aug 2026 10:10:08 GMT
+recorded_with: VCR 6.4.0

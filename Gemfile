@@ -19,6 +19,7 @@ gem "tailwindcss-rails"
 
 # HTTP client with middleware support for timeouts, retries, and connection reuse
 gem "faraday"
+gem "faraday-retry"
 
 # Rack middleware for rate limiting — protects WeatherAPI quota from abuse
 gem "rack-attack"
