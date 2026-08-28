@@ -1,0 +1,39 @@
+<%# app/views/forecasts/index.html.erb
+  #
+  # Landing page with zip code input form.
+  # The Turbo Frame wraps the results area so only the forecast
+  # section updates on form submission — no full page reload.
+%>
+
+<div class="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 flex flex-col items-center justify-center px-4">
+  <div class="w-full max-w-md">
+
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-blue-900 mb-2">Clearsky</h1>
+      <p class="text-blue-600 text-sm">Enter a US zip code to get the current forecast</p>
+    </div>
+
+    <%# Flash messages — shown when input validation fails %>
+    <% if alert %>
+      <div class="mb-4 px-4 py-3 bg-red-100 border border-red-300 text-red-700 rounded-lg text-sm">
+        <%= alert %>
+      </div>
+    <% end %>
+
+    <%= form_with url: forecast_path, method: :get, class: "flex gap-2 mb-8" do |f| %>
+      <%= f.text_field :zip,
+            placeholder: "e.g. 93721",
+            maxlength: 10,
+            autocomplete: "postal-code",
+            class: "flex-1 px-4 py-3 rounded-lg border border-blue-200 bg-white shadow-sm
+                    focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800 text-sm" %>
+      <%= f.submit "Get Forecast",
+            class: "px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium
+                    rounded-lg shadow-sm transition-colors text-sm cursor-pointer" %>
+    <% end %>
+
+    <%# Turbo Frame — forecast results render here on submission %>
+    <%= turbo_frame_tag "forecast" %>
+
+  </div>
+</div>

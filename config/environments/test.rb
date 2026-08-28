@@ -20,7 +20,7 @@ Rails.application.configure do
 
   # Show full error reports.
   config.consider_all_requests_local = true
-  
+
   # Use memory store in tests so cache reads/writes behave as they would
   # in production. null_store silently discards all cache operations,
   # which makes cache-related specs impossible to test correctly.

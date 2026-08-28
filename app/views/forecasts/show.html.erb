@@ -1,0 +1,10 @@
+<%# app/views/forecasts/show.html.erb
+  #
+  # Forecast results page. Wrapped in a Turbo Frame so the response
+  # replaces only the forecast section on the index page, not the
+  # full page layout.
+%>
+
+<%= turbo_frame_tag "forecast" do %>
+  <%= render "forecast", presenter: @presenter %>
+<% end %>
