@@ -35,5 +35,9 @@ module Clearsky
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Rack::Attack provides request throttling to protect the WeatherAPI quota
+    # from abuse. See config/initializers/rack_attack.rb for throttle rules.
+    config.middleware.use Rack::Attack
   end
 end
