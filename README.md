@@ -6,88 +6,113 @@ current conditions and a 7-day extended forecast. Results are cached by zip code
 
 ---
 
+## A Note on Development Tooling
+
+This project was developed with **Claude Code** as a productivity tool — used for
+architectural discussion, code generation, and iterative refinement. All architectural
+decisions, design patterns, and implementation choices were made and reviewed by the
+developer.
+
+---
+
 ## Tech Stack
 
-| Layer | Choice |
-|---|---|
-| Framework | Rails 8 |
-| Database | PostgreSQL |
-| Cache Store | Solid Cache (PostgreSQL-backed) |
-| Weather API | WeatherAPI.com |
-| HTTP Client | Faraday |
-| Frontend | Turbo Frames + Tailwind CSS |
-| Testing | RSpec + WebMock + VCR |
-| Rate Limiting | Rack::Attack |
+| Layer | Choice | Rationale |
+|---|---|---|
+| Framework | Rails 8 | Current release; ships Solid Cache as a first-party default |
+| Database | PostgreSQL | Enterprise standard |
+| Cache Store | Solid Cache (PostgreSQL-backed) | First-party Rails 8 cache; no Redis dependency |
+| Weather API | WeatherAPI.com | Single call returns current + 7-day forecast; clean JSON; 1M free calls/month |
+| HTTP Client | Faraday + faraday-retry | Middleware stack with built-in timeout and retry support |
+| Frontend | Turbo Frames + Tailwind CSS | Standard Rails 8 stack; no custom JavaScript |
+| Testing | RSpec + WebMock + VCR | Industry standard; deterministic specs with no live API calls in CI |
+| Rate Limiting | Rack::Attack | Protects WeatherAPI quota; 10 requests/minute per IP |
 
 ---
 
 ## Architecture
 
-The app is organized around a strict separation of concerns. The controller is thin —
-it validates input and delegates to a service object. All external API communication,
+The app is organized around a strict separation of concerns. The controller is intentionally
+thin — it validates input and delegates to a service object. All external API communication,
 caching, and business logic live in purpose-built classes.
 
 ```
 ForecastsController
-  └── ForecastQuery                     # validates + normalizes address input
-  └── ForecastService                   # orchestrates geocoding, weather, and cache
-        ├── Geocoding::WeatherApiGeocoder  # address → Location value object
-        ├── Weather::WeatherApiProvider    # Location → Forecast value object
-        └── Rails.cache                    # read/write keyed by zip code
+  └── ForecastService                      # orchestrates weather provider and cache
+        ├── Weather::WeatherApiProvider    # zip → Forecast value object via WeatherAPI
+        └── Rails.cache                    # read/write keyed by zip code (Solid Cache)
 ```
 
 ### Object Decomposition
 
 | Class | Responsibility |
 |---|---|
-| `ForecastsController` | HTTP boundary. Params in, response out. No business logic. |
-| `ForecastQuery` | Validates and normalizes the raw address input. |
-| `ForecastService` | Orchestrates geocoder, weather provider, and cache. Returns `{ forecast:, cached: }`. |
-| `Geocoding::Base` | Abstract geocoding interface (Strategy pattern). |
-| `Geocoding::WeatherApiGeocoder` | Resolves address → `Location` via WeatherAPI. Cached 24 hours. |
-| `Weather::Base` | Abstract weather provider interface (Strategy pattern). |
+| `ForecastsController` | HTTP boundary. Validates zip input, delegates to service, assigns presenter. |
+| `ForecastService` | Orchestrates provider and cache. Returns `Forecast` or `NullForecast`. |
 | `Weather::WeatherApiProvider` | Fetches forecast from WeatherAPI via Faraday. Handles timeouts and retries. |
-| `Location` | Immutable value object. Holds lat, lon, zip, city, region. |
-| `Forecast` | Immutable value object. Wraps API response. Exposes current temp, high/low, extended forecast days. |
-| `Forecast::Day` | Immutable value object. Represents a single day in the extended forecast. |
-| `Forecast::NullForecast` | Null Object. Returned on API failure. Prevents nil checks in the view. |
+| `Location` | Immutable value object. Holds zip, city, region from the API response. |
+| `Forecast` | Immutable value object. Wraps full API response. Exposes current temp, high/low, extended days. |
+| `Forecast::Day` | Immutable value object. Represents one day in the extended forecast. |
+| `Forecast::NullForecast` | Null Object. Returned on API failure. Eliminates nil checks in the view. |
 | `ForecastPresenter` | Formats `Forecast` data for display. Exposes cache indicator. |
+| `Clearsky::WeatherApiError` | Typed error raised on any API or network failure. |
 
 ### Design Patterns
 
-- **Strategy** — `Weather::Base` and `Geocoding::Base` define interfaces; concrete implementations are injected into `ForecastService`, making providers swappable without touching orchestration logic.
-- **Service Object** — `ForecastService` encapsulates the forecast use case. One entry point, one responsibility.
-- **Value Object** — `Forecast`, `Location`, and `Forecast::Day` are immutable and equal by value. Safe to cache, trivial to test.
-- **Null Object** — `Forecast::NullForecast` eliminates nil checks in the view layer.
-- **Presenter** — `ForecastPresenter` keeps formatting logic out of views and helpers.
+**Service Object** — `ForecastService` encapsulates the forecast use case. One entry point,
+one responsibility. The controller never contains business logic.
+
+**Value Object** — `Forecast`, `Location`, and `Forecast::Day` are immutable and equal by
+value. Frozen on initialization. Safe to cache, trivial to test.
+
+**Null Object** — `Forecast::NullForecast` implements the same interface as `Forecast` with
+safe defaults. The view renders it without nil checks or type inspection.
+
+**Presenter** — `ForecastPresenter` keeps all formatting logic out of views. Views call
+presenter methods; they never format data directly.
 
 ---
 
 ## Caching Strategy
 
-Forecast results are cached by **zip code** for 30 minutes using Solid Cache (PostgreSQL-backed).
-Caching at the zip level maximizes hit rate — many distinct addresses resolve to the same zip.
-Geocoding results are cached separately for 24 hours.
+Forecast results are cached by **zip code** for 30 minutes using Solid Cache (PostgreSQL-backed),
+shared across all Puma workers. Caching at the zip level maximizes hit rate — many addresses
+share the same zip code.
 
 | Data | Cache Key | TTL |
 |---|---|---|
 | Forecast | `clearsky:forecast:v1:{zip}` | 30 minutes |
-| Geocoding | `clearsky:geocoding:v1:{normalized_address}` | 24 hours |
 
-Cache keys are versioned (`v1`) so a data structure change can be invalidated by bumping
-the version without a manual cache flush. `race_condition_ttl` is set to prevent cache
-stampedes under concurrent load.
+Cache keys are versioned (`v1`) — bumping to `v2` invalidates stale entries without a manual
+cache flush. `race_condition_ttl` prevents cache stampedes under concurrent load.
 
-A **cache indicator** is displayed in the UI when a result is served from cache.
+A **cache indicator badge** is displayed in the UI when a result is served from cache.
+
+---
+
+## Address Input
+
+Input is scoped to **US zip codes**, which WeatherAPI accepts natively as the location
+parameter and uses to return precise forecast data. This eliminates a separate geocoding
+service dependency while satisfying the zip-level cache granularity requirement.
+
+A production system requiring free-form street address input would add a dedicated geocoding
+service (Google Maps Geocoding API or Geoapify) upstream of the weather provider. The
+architecture supports this cleanly — `ForecastService` accepts an injected provider, making
+the geocoding step addable without modifying orchestration logic.
 
 ---
 
 ## Security
 
 - **API credentials** stored in Rails encrypted credentials — never in `.env` or source control
-- **Input validation** handled by `ForecastQuery` before any external call is made
+- **Input validation** in the controller — blank zip redirects before any service call
 - **Rate limiting** via Rack::Attack — 10 requests/minute per IP, returns `429` when exceeded
+- **Typed errors** — `WeatherApiError` prevents broad `StandardError` rescues
+- **API response validation** — `fetch` calls on response keys raise `WeatherApiError` on
+  unexpected shape rather than propagating `KeyError` or `NoMethodError`
 - **CSRF protection** enabled by default; Turbo handles token injection automatically
+- **WebMock** disables all external HTTP in the test suite — no accidental live API calls in CI
 
 ---
 
@@ -95,11 +120,11 @@ A **cache indicator** is displayed in the UI when a result is served from cache.
 
 | Improvement | Notes |
 |---|---|
-| Circuit breaker | Add Stoplight or Semian if WeatherAPI reliability becomes a concern |
-| Background geocoding | Offload to Solid Queue if geocoding latency impacts UX |
-| Multi-provider fallback | Architecture already supports it via the Strategy pattern |
+| Free-form address input | Add Geoapify or Google Maps Geocoding upstream of `WeatherApiProvider` |
+| Circuit breaker | Add Stoplight if WeatherAPI reliability becomes a concern |
 | Celsius / Fahrenheit toggle | Straightforward addition once core flow is stable |
-| Observability | OpenTelemetry integration for production APM |
+| Observability | OpenTelemetry for production APM |
+| Background geocoding | Offload to Solid Queue if geocoding latency impacts UX |
 
 ---
 
@@ -107,7 +132,7 @@ A **cache indicator** is displayed in the UI when a result is served from cache.
 
 ### Prerequisites
 
-- Ruby 3.4+
+- Ruby 3.4.7
 - PostgreSQL 14+
 - A free [WeatherAPI.com](https://www.weatherapi.com) account and API key
 
@@ -135,14 +160,20 @@ weather_api:
 ### Database
 
 ```bash
-rails db:create db:migrate
+rails db:prepare
 ```
+
+Sets up the PostgreSQL databases and loads the Solid Cache schema.
+Required for caching to work — skipping this will cause a `PG::UndefinedTable`
+error on the first cached request.
 
 ### Run
 
 ```bash
 bin/dev
 ```
+
+Visit `http://localhost:3000`, enter a US zip code, and get the forecast.
 
 ---
 
@@ -159,8 +190,15 @@ bundle exec rspec spec/services/forecast_service_spec.rb
 bundle exec rspec --format documentation
 ```
 
+All external HTTP calls are stubbed via WebMock and VCR cassettes. No API key or network
+connection is required to run the test suite.
+
 ---
 
 ## Health Check
 
 `GET /health` returns `200 OK`. Used by load balancers to verify the app is running.
+
+---
+
+*Ruby on Rails 8 · WeatherAPI.com · Solid Cache · Turbo · Tailwind CSS*

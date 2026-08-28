@@ -11,21 +11,52 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
-      <%= yield %>
-    </main>
+  <body class="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
+    <div class="flex flex-col items-center justify-start min-h-screen px-4 py-12">
+
+      <%# ── Header + persistent search form ─────────────────────────────── %>
+      <div class="w-full max-w-md mb-6">
+        <div class="text-center mb-6">
+          <%= link_to root_path, class: "inline-block" do %>
+            <h1 class="text-4xl font-bold text-blue-900">Clearsky</h1>
+          <% end %>
+          <p class="text-blue-600 text-sm mt-1">Enter a US zip code to get the current forecast</p>
+        </div>
+
+        <%# Flash messages %>
+        <% if alert %>
+          <div class="mb-4 px-4 py-3 bg-red-100 border border-red-300 text-red-700 rounded-lg text-sm">
+            <%= alert %>
+          </div>
+        <% end %>
+
+        <%= form_with url: forecast_path, method: :get, class: "flex gap-2 mb-2" do |f| %>
+          <%= f.text_field :zip,
+                value: params[:zip],
+                placeholder: "e.g. 93721",
+                maxlength: 10,
+                autocomplete: "postal-code",
+                class: "flex-1 px-4 py-3 rounded-lg border border-blue-200 bg-white shadow-sm
+                        focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800 text-sm" %>
+          <%= f.submit "Get Forecast",
+                class: "px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium
+                        rounded-lg shadow-sm transition-colors text-sm cursor-pointer" %>
+        <% end %>
+      </div>
+
+      <%# ── Page content (Turbo Frame target) ───────────────────────────── %>
+      <div class="w-full max-w-md">
+        <%= yield %>
+      </div>
+
+    </div>
   </body>
 </html>
